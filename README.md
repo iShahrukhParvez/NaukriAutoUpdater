@@ -31,11 +31,9 @@ The script prints a success message when the save button is clicked. That messag
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<YOUR_GITHUB_USERNAME>/NaukriAutoUpdater.git
+git clone https://github.com/iShahrukhParvez/NaukriAutoUpdater.git
 cd NaukriAutoUpdater
 ```
-
-Replace `<YOUR_GITHUB_USERNAME>` with your GitHub username.
 
 ### 2. Create and activate a virtual environment (recommended)
 
