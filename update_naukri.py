@@ -95,7 +95,6 @@ def run_bot(setup_mode=False):
             
         except Exception as e:
             print(f"❌ Automation Error: {e}")
-            print("💡 Tip: Try running the script with headless=False temporarily to watch where it gets stuck.")
             
         context.close()
 
