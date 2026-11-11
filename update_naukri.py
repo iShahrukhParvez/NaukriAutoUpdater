@@ -90,7 +90,7 @@ def run_bot(setup_mode=False):
             save_button = page.locator('button.btn-dark-ot[type="submit"]:has-text("Save")').first
             save_button.wait_for(state="visible", timeout=5000)
             save_button.click()
-            print("✅ Success: Profile timestamp refreshed to 'Active Today' status!")
+            print("✅ Success: Profile headline save action completed.")
             time.sleep(2)
             
         except Exception as e:
