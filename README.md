@@ -97,10 +97,9 @@ If the session expires or the script redirects to the login page, repeat the fir
 python update_naukri.py setup
 ```
 
+## Schedule Automatic Runs on Windows
 
-## Schedule automatic runs on Windows
-
-You can use **Windows Task Scheduler** to run the script automatically at a chosen time. The script itself does not contain a scheduler; Task Scheduler starts it for you.
+You can use **Windows Task Scheduler** to run NaukriAutoUpdater automatically at your preferred time. The script itself does not contain a scheduler. Windows Task Scheduler handles the scheduling.
 
 ### Before scheduling
 
@@ -116,46 +115,65 @@ You can use **Windows Task Scheduler** to run the script automatically at a chos
    python update_naukri.py
    ```
 
-3. Find the full paths to:
-   - Your Python executable. If you use a virtual environment, use the executable inside `.venv\Scripts\python.exe`.
-   - `update_naukri.py` in your cloned repository.
+3. Identify the full paths to your Python executable and project script.
 
-   For example:
+   **If using a virtual environment:**
 
-   ```text
-   Python executable (Virtual Environment):
-   C:\Users\YourName\NaukriAutoUpdater\.venv\Scripts\python.exe
+   Activate your environment:
 
-   Python executable (System Installation):
-   C:\Users\YourName\AppData\Local\Programs\Python\Python314\python.exe
-
-   Script: C:\Users\YourName\NaukriAutoUpdater\update_naukri.py
+   ```powershell
+   .venv\Scripts\Activate.ps1
    ```
 
+   Then run:
 
-   Replace these example paths with the actual paths on your computer.
+   ```powershell
+   python -c "import sys; print(sys.executable)"
+   ```
 
-### Create a scheduled task
+   **If using system-installed Python:**
 
-1. Open the Windows **Start** menu, search for **Task Scheduler**, and open it.
+   Run the same command without activating a virtual environment:
+
+   ```powershell
+   python -c "import sys; print(sys.executable)"
+   ```
+
+   Copy the path displayed in the terminal.
+
+   You also need the full path to `update_naukri.py` inside your cloned repository.
+
+### Create a Scheduled Task
+
+1. Open the Windows Start menu, search for **Task Scheduler**, and open it.
 2. In the Actions pane, select **Create Basic Task**.
-3. Enter a name such as `NaukriAutoUpdater`, optionally add a description, and select **Next**.
-4. Choose a trigger, for example **Daily**, then select **Next**.
-5. Choose the start date and time, and set the recurrence interval. Select **Next**.
-6. Choose **Start a program**, then select **Next**.
-7. Fill in the action fields:
+3. Enter a name such as `NaukriAutoUpdater` and select Next.
+4. Choose a trigger, such as **Daily**, and select Next.
+5. Configure your preferred start date, time, and recurrence interval.
+6. Choose **Start a program** and select Next.
+7. Configure the following fields:
 
    **Program/script**
 
-   Enter the full path to your Python executable, for example:
+   Enter the full path to your Python executable.
+
+   Example using a virtual environment:
 
    ```text
    C:\Users\YourName\NaukriAutoUpdater\.venv\Scripts\python.exe
    ```
 
+   Example using system-installed Python:
+
+   ```text
+   C:\Users\YourName\AppData\Local\Programs\Python\Python314\python.exe
+   ```
+
+   Use the path returned by the PowerShell command on your own computer.
+
    **Add arguments (optional)**
 
-   Enter the full path to the script in quotes:
+   Enter the full path to the Python script, enclosed in quotes:
 
    ```text
    "C:\Users\YourName\NaukriAutoUpdater\update_naukri.py"
@@ -163,30 +181,41 @@ You can use **Windows Task Scheduler** to run the script automatically at a chos
 
    **Start in (optional)**
 
-   Enter the project folder path, without quotes:
+   Enter the project directory without quotes:
 
    ```text
    C:\Users\YourName\NaukriAutoUpdater
    ```
 
-8. Select **Next**, review the task details, and select **Finish**.
+8. Select Next, review the task details, and select Finish.
 
-### Recommended task settings
+### Recommended Task Settings
 
-After creating the task, find it in **Task Scheduler Library**, right-click it, and select **Properties**.
+After creating the task:
 
-- Under **General**, select **Run only when user is logged on**. This is the recommended starting point because the script launches a visible Chromium browser and uses the signed-in Windows user's local browser profile.
-- Under **Settings**, consider enabling **If the task is already running, then the following rule applies: Do not start a new instance**. This helps prevent overlapping runs.
-- Keep your computer powered on and awake at the scheduled time. A task cannot run while the computer is shut down. If your power settings allow it, Task Scheduler can be configured to wake the computer, but availability depends on the device and Windows configuration.
+1. Open Task Scheduler Library.
+2. Right-click `NaukriAutoUpdater` and select Properties.
+3. Under **General**, select **Run only when user is logged on**. This is recommended because the script launches a visible Chromium browser.
+4. Under **Settings**, select **If the task is already running, then the following rule applies: Do not start a new instance**. This prevents overlapping executions.
 
-### Test and manage the task
+Keep your computer powered on and available at the scheduled time. If the computer is shut down, the task cannot execute.
 
-- In Task Scheduler Library, right-click `NaukriAutoUpdater` and select **Run** to test it.
-- Check **Last Run Result** and **History** in Task Scheduler if it does not run as expected. You may need to enable task history from the Actions pane.
-- To change the schedule, open the task's **Properties** and edit the **Triggers** tab.
-- To stop future runs, right-click the task and select **Disable** or **Delete**.
+### Test and Manage the Scheduled Task
 
-**Important:** Complete the manual login setup before scheduling. Do not schedule the `setup` command. Schedule only the normal command shown above. Your Windows account must have access to the project folder and the saved browser profile. The computer must be available at the scheduled time, and Naukri session expiry or website changes may require manual attention. Use a schedule that respects Naukri's current terms and policies.
+- Right-click the task and select **Run** to test it.
+- Check the Last Run Result and Task History if the task does not run as expected.
+- To change the schedule, open Properties and edit the Triggers tab.
+- To stop future executions, right-click the task and select Disable or Delete.
+
+**Important Notes:**
+
+- Complete the manual login setup before scheduling. Do not schedule the `setup` command.
+- Schedule only the normal `update_naukri.py` execution.
+- Use the same Windows user account that completed the initial login setup, so the saved browser profile remains accessible.
+- The computer must be awake and available at the scheduled time.
+- Task Scheduler's Last Run Result does not independently confirm that Naukri updated your profile. Check the script output when testing manually.
+- If your Naukri session expires or the website changes, manual attention may be required.
+- Use a schedule that respects Naukri's current terms and policies.
 
 ## Browser profile and account security
 
@@ -256,7 +285,3 @@ Use this project only with an account you are authorized to access. Respect Nauk
 ## Disclaimer
 
 This software is provided “as is”, without warranty of any kind. You are responsible for reviewing the website's rules and deciding whether to use the automation. The author is not responsible for account restrictions, unexpected profile changes, or other consequences arising from its use.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
